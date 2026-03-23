@@ -1,11 +1,25 @@
+import { useState, useEffect, createContext } from 'react';
 import MemeCoinDashboard from './components/MemeCoinDashboard';
 import './index.css';
 
+export const ThemeContext = createContext();
+
 function App() {
+  const [theme, setTheme] = useState(() => {
+    return localStorage.getItem('memeradar-theme') || 'dark';
+  });
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('memeradar-theme', theme);
+  }, [theme]);
+
+  const toggleTheme = () => setTheme(t => t === 'dark' ? 'light' : 'dark');
+
   return (
-    <div className="App">
+    <ThemeContext.Provider value={{ theme, toggleTheme }}>
       <MemeCoinDashboard />
-    </div>
+    </ThemeContext.Provider>
   );
 }
 
